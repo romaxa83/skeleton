@@ -2,39 +2,26 @@ package server
 
 import (
 	"fmt"
-	"github.com/manifoldco/promptui"
+	"github.com/romaxa83/skeleton/internal/console"
 )
 
 type Data struct {
 	Name string
 }
+const (
+	title = "Choice Server"
+)
+var serverName = []string{"Nginx", "Apache"}
 
 func GetData() *Data {
 
-	n, err := choiceVersion()
+	result ,err := console.Select(console.NewDataForSelect(title, serverName))
+
 	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
+		fmt.Printf("Prompt failed %v\n", result)
 	}
 
 	return &Data{
-		Name: n,
+		Name: result,
 	}
-}
-
-func choiceVersion() (string, error) {
-	prompt := promptui.Select{
-		Label: "Choice Server",
-		Size: 9,
-		HideHelp: true,
-		Items: []string{"Nginx", "Apache"},
-	}
-	_, result, err := prompt.Run()
-
-	if err != nil {
-		return "", err
-	}
-
-	fmt.Printf("You choose %q\n", result)
-
-	return result, nil
 }

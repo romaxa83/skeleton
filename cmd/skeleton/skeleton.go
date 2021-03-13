@@ -2,26 +2,35 @@ package main
 
 import (
 	"fmt"
+	"github.com/romaxa83/skeleton/internal/db"
+	"github.com/romaxa83/skeleton/internal/nodejs"
 	"github.com/romaxa83/skeleton/internal/php"
+	"github.com/romaxa83/skeleton/internal/project_name"
+	"github.com/romaxa83/skeleton/internal/project_path"
+	"github.com/romaxa83/skeleton/internal/redis"
 	"github.com/romaxa83/skeleton/internal/server"
 )
 
 type Config struct {
+	projectName *project_name.Data
+	projectPath *project_path.Data
 	server *server.Data
 	php *php.Data
+	db *db.Data
+	nodejs *nodejs.Data
+	redis *redis.Data
 }
 
-type DB struct {
-	Name string
-	Version string
-}
 
 func initConfig() *Config {
-	//php := php.GetData()
-	//fmt.Printf("%T\n", php)
 	return &Config{
+		projectName: project_name.GetData(),
+		projectPath: project_path.GetData(),
 		server: server.GetData(),
 		php: php.GetData(),
+		db: db.GetData(),
+		nodejs: nodejs.GetData(),
+		redis: redis.GetData(),
 	}
 }
 
@@ -30,24 +39,8 @@ func main() {
 	config := initConfig()
 	fmt.Println(config.server)
 	fmt.Println(config.php.Version)
-
-
-	//choiceVersion()
-	//prompt := promptui.Select{
-	//	Label: "Select Day",
-	//	Size: 9,
-	//	HideHelp: true,
-	//	Items: []string{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"},
-	//}
-	//
-	//_, result, err := prompt.Run()
-	//
-	//if err != nil {
-	//	fmt.Printf("Prompt failed %v\n", err)
-	//	return
-	//}
-	//
-	//fmt.Printf("You choose %q\n", result)
+	fmt.Println(config.nodejs.Install)
+	fmt.Println(config.nodejs.Version)
 }
 
 
