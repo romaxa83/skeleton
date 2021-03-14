@@ -10,7 +10,7 @@ const (
 )
 
 type Data struct {
-	ProjectName string
+	Name string
 }
 
 func GetData() *Data {
@@ -21,6 +21,6 @@ func GetData() *Data {
 	}
 
 	return &Data{
-		ProjectName: n,
+		Name: n,
 	}
 }

@@ -11,7 +11,7 @@ const (
 )
 
 type Data struct {
-	ProjectPath string
+	Path string
 }
 
 func GetData() *Data {
@@ -28,6 +28,6 @@ func GetData() *Data {
 	}
 
 	return &Data{
-		ProjectPath: n,
+		Path: n,
 	}
 }
