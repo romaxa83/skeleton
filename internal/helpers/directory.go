@@ -40,6 +40,36 @@ func CreateDir(path string)  {
 	}
 }
 
+func CreateAndWriteFile(path string, text string)  {
+	file, err := os.Create(path)
+
+	if err != nil{
+		fmt.Println("Unable to create file:", err)
+		os.Exit(1)
+	}
+	defer file.Close()
+
+	file.WriteString(text)
+
+	console.Success("create and write file - " + path)
+}
+
+func AddToFile(path string, text string) {
+
+	file, err := os.OpenFile(path,
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY, os.ModePerm)
+	if err != nil {
+		fmt.Println("Problem open file ("+ path +") :", err)
+	}
+	defer file.Close()
+
+	if _, err := file.WriteString(text); err != nil {
+		fmt.Println("Problem with add text to file ("+ path +") :", err)
+	}
+
+	console.Success("recorded to file - " + path)
+}
+
 func createDirectory(path string)  {
 	os.MkdirAll(path, os.ModePerm)
 	console.Success("create directory - " + path)
@@ -52,6 +82,5 @@ func deleteDirectory(path string) {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
 	console.Success("deleted directory - " + path)
 }

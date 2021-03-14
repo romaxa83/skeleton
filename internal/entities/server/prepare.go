@@ -10,8 +10,10 @@ type Data struct {
 }
 const (
 	title = "Choice Server"
+	nginx = "Nginx"
+	apache = "Apache"
 )
-var serverName = []string{"Nginx", "Apache"}
+var serverName = []string{nginx, apache}
 
 func GetData() *Data {
 

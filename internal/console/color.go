@@ -11,10 +11,11 @@ const (
 	colorGreen        = "\u001b[32m"
 	colorYellow       = "\u001b[33m"
 	colorBlue         = "\u001b[34m"
+	colorReset        = "\u001b[0m"
 )
 
 func colorize(color Color, message string) {
-	fmt.Println(string(color), message)
+	fmt.Println(string(color), message, string(colorReset))
 }
 
 func Info(message string) {
