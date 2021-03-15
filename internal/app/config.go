@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/romaxa83/skeleton/internal/entities/db"
 	"github.com/romaxa83/skeleton/internal/entities/ip"
 	"github.com/romaxa83/skeleton/internal/entities/php"
 	"github.com/romaxa83/skeleton/internal/entities/project_name"
@@ -14,7 +15,7 @@ type Config struct {
 	IP *ip.Data
 	Server *server.Data
 	Php *php.Data
-	//db *db.Data
+	DB *db.Data
 	//nodejs *nodejs.Data
 	//redis *redis.Data
 }
@@ -26,7 +27,7 @@ func InitConfig() *Config {
 		IP: ip.GetData(),
 		Server:      server.GetData(),
 		Php:         php.GetData(),
-		//db:          db.GetData(),
+		DB:          db.GetData(),
 		//nodejs:      nodejs.GetData(),
 		//redis:       redis.GetData(),
 	}
