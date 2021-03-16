@@ -2,15 +2,19 @@ package app
 
 import (
 	"fmt"
+	"github.com/creack/pty"
 	"github.com/romaxa83/skeleton/internal/entities/db"
 	"github.com/romaxa83/skeleton/internal/entities/php"
 	"github.com/romaxa83/skeleton/internal/entities/server"
 	"github.com/romaxa83/skeleton/internal/helpers"
+	"io"
+	"os"
+	"os/exec"
 	"strings"
 )
 
 var startDockerCompose string = `version: "3.7"
-  services:
+services:
 `
 
 var endDockerCompose string = `networks:
@@ -24,19 +28,42 @@ var endDockerCompose string = `networks:
 func Create(config *Config) {
 
 	path := config.ProjectPath.Path + "/" + config.ProjectName.Name
+	pathToDockerCompose := path + "/docker-compose.yml"
+
+
+	//console.Run("docker-compose", "-f", pathToDockerCompose, "build")
+
+	c := exec.Command("docker-compose", "-f", pathToDockerCompose, "up", "-d")
+	f, err := pty.Start(c)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	io.Copy(os.Stdout, f)
+
+	//c := exec.Command("docker-compose", "-f", pathToDockerCompose, "build")
+	//f, err := pty.Start(c)
+	//if err != nil {
+	//	fmt.Println(err)
+	//	os.Exit(1)
+	//}
+	//io.Copy(os.Stdout, f)
+
+
+	//==============================
+	//path := config.ProjectPath.Path + "/" + config.ProjectName.Name
 	//pathToDockerCompose := path + "/docker-compose.yml"
 
 	// создаем папку проекта
-	helpers.CreateDir(path)
+	//helpers.CreateDir(path)
 
 	// создаем docker-compose с выбраными сервисами, а также создаем под них конфиги
-	createDockerCompose(config, path)
+	//createDockerCompose(config, path)
 
 
 	//fmt.Println(pathToDockerCompose)
 }
 
-// с
 func createDockerCompose(config *Config, path string)  {
 	pathToDockerCompose := path + "/docker-compose.yml"
 	fmt.Println(pathToDockerCompose)

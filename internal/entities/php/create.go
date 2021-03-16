@@ -58,7 +58,6 @@ RUN echo "Set default timezone - Europe/Kiev"
 RUN echo "Europe/Kiev" > /etc/timezone
 
 COPY ./dev/php/conf.d /usr/local/etc/php/conf.d
-COPY ./dev/php/supervisor/niko_schedule.conf /etc/supervisor/conf.d
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
