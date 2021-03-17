@@ -56,6 +56,7 @@ func Create(
 
 	fullPathToStorage := path + pathToStorage
 	helpers.CreateDir(fullPathToStorage)
+	helpers.CreateIgnoreAll(fullPathToStorage)
 
 	if driver == mysqlDriver {
 		return createMysql(ip, projectName, version, username, password, dbName)

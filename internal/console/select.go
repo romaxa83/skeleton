@@ -15,9 +15,9 @@ func NewDataForSelect(title string, items []string) *DataForSelect {
 }
 
 func Select(d *DataForSelect) (string, error) {
-	prompt := promptui.Select{
-		Label: d.title,
-		Size: 9,
+	var prompt = promptui.Select{
+		Label:    d.title,
+		Size:     9,
 		HideHelp: true,
 		Items: d.items,
 	}

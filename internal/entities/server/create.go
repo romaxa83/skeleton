@@ -84,6 +84,11 @@ func Create(
 	projectName string,
 ) string {
 
+	//создаем папку для логов
+	pathToLogs := path + "/docker/storage/logs"
+	helpers.CreateDir(pathToLogs)
+	helpers.CreateIgnoreAll(pathToLogs)
+
 	if driver == nginx {
 		return createNginx(path, ip, projectName)
 	}
@@ -99,6 +104,7 @@ func createNginx(
 	pathToConfFileNginx := path + pathToConfNginx + "/default.conf"
 	pathToDockerfileNginx := path + pathToDockerNginx + "/Dockerfile"
 
+	// создаем папки и файлы для конфигов
 	helpers.CreateDir(path + pathToConfNginx)
 	helpers.CreateAndWriteFile(pathToConfFileNginx, conf)
 	helpers.CreateAndWriteFile(pathToDockerfileNginx, dockerFileNginx)
