@@ -6,8 +6,11 @@ import (
 	"github.com/romaxa83/skeleton/internal/console"
 	"github.com/romaxa83/skeleton/internal/entities/db"
 	"github.com/romaxa83/skeleton/internal/entities/framework"
+	"github.com/romaxa83/skeleton/internal/entities/mailer"
 	"github.com/romaxa83/skeleton/internal/entities/makefile"
+	"github.com/romaxa83/skeleton/internal/entities/nodejs"
 	"github.com/romaxa83/skeleton/internal/entities/php"
+	"github.com/romaxa83/skeleton/internal/entities/redis"
 	"github.com/romaxa83/skeleton/internal/entities/server"
 	"github.com/romaxa83/skeleton/internal/helpers"
 	"io"
@@ -76,6 +79,17 @@ func Create(config *Config) {
 		helpers.ReplaceIntoFile(envFile, "DB_DATABASE=laravel", "DB_DATABASE=" + config.DB.DbName, 1)
 		helpers.ReplaceIntoFile(envFile, "DB_USERNAME=root", "DB_USERNAME=" + config.DB.UserName, 1)
 		helpers.ReplaceIntoFile(envFile, "DB_PASSWORD=", "DB_PASSWORD=" + config.DB.Password, 1)
+
+		if config.Redis.Install {
+			helpers.ReplaceIntoFile(envFile, "REDIS_HOST=127.0.0.1", "REDIS_HOST=" + config.IP.IP, 1)
+			helpers.ReplaceIntoFile(envFile, "REDIS_PASSWORD=null", "REDIS_PASSWORD=" + config.Redis.Password, 1)
+		}
+
+		if config.Mailer.Install {
+			helpers.ReplaceIntoFile(envFile, "REDIS_HOST=127.0.0.1", "REDIS_HOST=" + config.IP.IP, 1)
+			helpers.ReplaceIntoFile(envFile, "REDIS_PASSWORD=null", "REDIS_PASSWORD=secret" + config.Redis.Password, 1)
+		}
+
 		helpers.AddToFile(envFile, "\nDOCKER_BRIDGE=" + config.IP.IP)
 		helpers.AddToFile(envFile, "\nDOCKER_NETWORK=" + helpers.NetworkIP(config.IP.IP))
 		// правим docker-compose
@@ -100,14 +114,14 @@ func Create(config *Config) {
 		console.Run("docker-compose", "-f", pathToDockerCompose, "--env-file", envFile, "up", "-d")
 		time.Sleep(8 * time.Second)
 		if config.Framework.RunMigration {
-			console.Run("docker-compose", "-f", pathToDockerCompose, "--env-file", envFile, "run", "--rm", "php-fpm", "pa", "migrate")
+			console.Run("docker-compose", "-f", pathToDockerCompose, "--env-file", envFile, "run", "--rm", "php-fpm", "php", "artisan", "migrate")
 		}
 		if config.Framework.RunSeed {
-			console.Run("docker-compose", "-f", pathToDockerCompose, "--env-file", envFile, "run", "--rm", "php-fpm", "pa", "db:seed")
+			console.Run("docker-compose", "-f", pathToDockerCompose, "--env-file", envFile, "run", "--rm", "php-fpm", "php", "artisan", "db:seed")
 		}
-
-		console.Success("http://" + config.IP.IP)
 	}
+
+	console.Success("http://" + config.IP.IP)
 }
 
 func createDockerCompose(config *Config, path string, pathToDockerCompose string)  {
@@ -123,6 +137,25 @@ func createDockerCompose(config *Config, path string, pathToDockerCompose string
 	servicePhp := php.Create(path, config.Php.Version, config.ProjectName.Name)
 	helpers.AddToFile(pathToDockerCompose, servicePhp)
 
+	// создаем nodeJS
+	if config.Nodejs.Install {
+		serviceNode := nodejs.Create(config.Nodejs, path, config.ProjectName.Name)
+		helpers.AddToFile(pathToDockerCompose, serviceNode)
+	}
+
+	// создаем redis
+	if config.Redis.Install {
+		serviceRedis := redis.Create(config.Redis, path, config.ProjectName.Name, config.IP.IP)
+		helpers.AddToFile(pathToDockerCompose, serviceRedis)
+	}
+
+	// создаем mailer
+	if config.Mailer.Install {
+		serviceMailer := mailer.Create(config.ProjectName.Name, config.IP.IP)
+		helpers.AddToFile(pathToDockerCompose, serviceMailer)
+	}
+
+	// todo отрефакторить
 	// создаем бд и прописываем docker-compose
 	serviceDb := db.Create(
 		path,

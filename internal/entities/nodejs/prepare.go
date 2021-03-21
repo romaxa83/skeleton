@@ -3,7 +3,6 @@ package nodejs
 import (
 	"fmt"
 	"github.com/romaxa83/skeleton/internal/console"
-	"github.com/romaxa83/skeleton/internal/helpers"
 )
 
 type Data struct {
@@ -12,21 +11,15 @@ type Data struct {
 }
 
 const (
-	yes = "Yes"
-	no = "No"
 	title = "Install nodejs"
 	titleVersion = "Choice Nodejs version"
 )
-var ask = []string{yes, no}
+
 var versions = []string{"13", "12", "8"}
 
 func GetData() *Data {
 
-	a, err := console.Select(console.NewDataForSelect(title, ask))
-	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
-	}
-	an := helpers.ConvertBoolFromString(a)
+	an := console.Ask(title)
 	v := ""
 
 	if an {
@@ -34,7 +27,6 @@ func GetData() *Data {
 		if err != nil {
 			fmt.Printf("Prompt failed %v\n", err)
 		}
-
 		v = ver
 	}
 

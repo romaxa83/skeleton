@@ -66,7 +66,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --fil
 
 RUN groupadd --gid {gid} {user} \
     && useradd --home-dir /home/{user} --create-home --uid {uid} \
-        --{gid} 1000 --shell /bin/sh --skel /dev/null {user}
+        --gid {gid} --shell /bin/sh --skel /dev/null {user}
 
 USER {user}
 
@@ -226,13 +226,13 @@ func Create(
 	helpers.CreateAndWriteFile(pathToBash, bash)
 
 	dockerFilePhp = strings.Replace(dockerFilePhp, "{version}", version,1)
-	dockerFilePhp = strings.Replace(dockerFilePhp, "{user}", helpers.GetUser().Name,-1)
-	dockerFilePhp = strings.Replace(dockerFilePhp, "{gid}", helpers.GetUser().Gid,-1)
-	dockerFilePhp = strings.Replace(dockerFilePhp, "{uid}", helpers.GetUser().Uid,-1)
+	dockerFilePhp = strings.Replace(dockerFilePhp, "{user}", string(helpers.GetUser().Name),-1)
+	dockerFilePhp = strings.Replace(dockerFilePhp, "{gid}", string(helpers.GetUser().Gid),-1)
+	dockerFilePhp = strings.Replace(dockerFilePhp, "{uid}", string(helpers.GetUser().Uid),-1)
 	helpers.CreateAndWriteFile(pathToDockerfile, dockerFilePhp)
 
 	t := strings.Replace(dockerCompose, "{name}", projectName,2)
-	t = strings.Replace(dockerCompose, "{user}", helpers.GetUser().Name,2)
+	f := strings.Replace(t, "{user}", helpers.GetUser().Name,-1)
 
-	return t
+	return f
 }

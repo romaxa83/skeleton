@@ -4,9 +4,12 @@ import (
 	"github.com/romaxa83/skeleton/internal/entities/db"
 	"github.com/romaxa83/skeleton/internal/entities/framework"
 	"github.com/romaxa83/skeleton/internal/entities/ip"
+	"github.com/romaxa83/skeleton/internal/entities/mailer"
+	"github.com/romaxa83/skeleton/internal/entities/nodejs"
 	"github.com/romaxa83/skeleton/internal/entities/php"
 	"github.com/romaxa83/skeleton/internal/entities/project_name"
 	"github.com/romaxa83/skeleton/internal/entities/project_path"
+	"github.com/romaxa83/skeleton/internal/entities/redis"
 	"github.com/romaxa83/skeleton/internal/entities/server"
 )
 
@@ -18,8 +21,9 @@ type Config struct {
 	Php 		*php.Data
 	DB 			*db.Data
 	Framework 	*framework.Data
-	//nodejs *nodejs.Data
-	//redis *redis.Data
+	Nodejs      *nodejs.Data
+	Redis 		*redis.Data
+	Mailer 		*mailer.Data
 }
 
 func InitConfig() *Config {
@@ -31,7 +35,8 @@ func InitConfig() *Config {
 		Php:         php.GetData(),
 		DB:          db.GetData(),
 		Framework:   framework.GetData(),
-		//nodejs:      nodejs.GetData(),
-		//redis:       redis.GetData(),
+		Nodejs:      nodejs.GetData(),
+		Redis:       redis.GetData(),
+		Mailer:      mailer.GetData(),
 	}
 }
