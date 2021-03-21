@@ -64,6 +64,12 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer --quiet \
     && rm -rf /root/.composer/cache
 
+RUN groupadd --gid {gid} {user} \
+    && useradd --home-dir /home/{user} --create-home --uid {uid} \
+        --{gid} 1000 --shell /bin/sh --skel /dev/null {user}
+
+USER {user}
+
 WORKDIR /app
 `
 var phpIni string = `max_execution_time = 1000
@@ -201,7 +207,7 @@ var dockerCompose string = `
       TERM: xterm-256color
     volumes:
       - ./:/app
-      - ./docker/dev/php/.bashrc:/root/.bashrc
+      - ./docker/dev/php/.bashrc:/home/{user}/.bashrc
 `
 
 func Create(
@@ -220,9 +226,13 @@ func Create(
 	helpers.CreateAndWriteFile(pathToBash, bash)
 
 	dockerFilePhp = strings.Replace(dockerFilePhp, "{version}", version,1)
+	dockerFilePhp = strings.Replace(dockerFilePhp, "{user}", helpers.GetUser().Name,-1)
+	dockerFilePhp = strings.Replace(dockerFilePhp, "{gid}", helpers.GetUser().Gid,-1)
+	dockerFilePhp = strings.Replace(dockerFilePhp, "{uid}", helpers.GetUser().Uid,-1)
 	helpers.CreateAndWriteFile(pathToDockerfile, dockerFilePhp)
 
 	t := strings.Replace(dockerCompose, "{name}", projectName,2)
+	t = strings.Replace(dockerCompose, "{user}", helpers.GetUser().Name,2)
 
 	return t
 }

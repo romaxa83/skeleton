@@ -3,7 +3,10 @@ package helpers
 import (
 	"fmt"
 	"github.com/romaxa83/skeleton/internal/console"
+	"io/ioutil"
 	"os"
+	"path/filepath"
+	"strings"
 )
 
 func Exist(path string) (bool, error) {
@@ -28,7 +31,7 @@ func CreateDir(path string)  {
 		an := console.Ask("Delete directory")
 
 		if an {
-			deleteDirectory(path + "/")
+			DeleteDirectory(path + "/")
 			createDirectory(path)
 		} else {
 			console.Error("stopped build")
@@ -54,6 +57,17 @@ func CreateAndWriteFile(path string, text string)  {
 	console.Success("create and write file - " + path)
 }
 
+// меняет вхожденмя в файле
+func ReplaceIntoFile(path string, search string, replace string, n int)  {
+	fContent, err := ioutil.ReadFile(path)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	newFile := strings.Replace(string(fContent), search, replace,n)
+	CreateAndWriteFile(path, newFile)
+}
+
 func AddToFile(path string, text string) {
 
 	file, err := os.OpenFile(path,
@@ -75,7 +89,7 @@ func createDirectory(path string)  {
 	console.Success("create directory - " + path)
 }
 
-func deleteDirectory(path string) {
+func DeleteDirectory(path string) {
 
 	err := os.RemoveAll(path)
 	if err != nil {
@@ -83,4 +97,27 @@ func deleteDirectory(path string) {
 		os.Exit(1)
 	}
 	console.Success("deleted directory - " + path)
+}
+
+// перемещает содержимое из одной директории в другую
+func MoveAllFromDir(path string, moveToPath string)  {
+	filepath.Walk(path, func(wPath string, info os.FileInfo, err error) error {
+		// Обход директории без вывода
+		if wPath == path {
+			return nil
+		}
+		// Если данный путь является директорией, то останавливаем рекурсивный обход
+		// и возвращаем название папки
+		if info.IsDir() {
+			console.Info("move directory - " + wPath)
+			console.Run("mv", wPath, moveToPath)
+			return filepath.SkipDir
+		}
+		// Выводится название файла
+		if wPath != path {
+			console.Info("move file - " + wPath)
+			console.Run("mv", wPath, moveToPath)
+		}
+		return nil
+	})
 }
