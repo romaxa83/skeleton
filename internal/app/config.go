@@ -17,6 +17,7 @@ type Config struct {
 	ProjectName *project_name.Data
 	ProjectPath *project_path.Data
 	IP 			*ip.Data
+	//Arch 		*arch.Data
 	Server 		*server.Data
 	Php 		*php.Data
 	DB 			*db.Data
@@ -31,6 +32,7 @@ func InitConfig() *Config {
 		ProjectName: project_name.GetData(),
 		ProjectPath: project_path.GetData(),
 		IP:          ip.GetData(),
+		//Arch:        arch.GetData(),
 		Server:      server.GetData(),
 		Php:         php.GetData(),
 		DB:          db.GetData(),

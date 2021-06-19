@@ -2,7 +2,6 @@ package framework
 
 import (
 	"github.com/romaxa83/skeleton/internal/console"
-	"github.com/romaxa83/skeleton/internal/helpers"
 )
 
 func Install(data *Data, path string, pathToDockerCompose string) {
@@ -16,7 +15,7 @@ func Install(data *Data, path string, pathToDockerCompose string) {
 
 func createLaravel(data *Data, path string, pathToDockerCompose string)  {
 
-	laraPath := path + "/laravel/"
+	//laraPath := path + "/laravel/"
 
 	console.Info("INSTALL LARAVEL")
 
@@ -24,8 +23,8 @@ func createLaravel(data *Data, path string, pathToDockerCompose string)  {
 	console.Run("docker-compose", "-f", pathToDockerCompose, "run", "--rm", "php-fpm", "composer", "create-project", "--prefer-dist", "laravel/laravel:^" + data.Version +".0")
 
 	// переносим laravel в папку проекта
-	helpers.MoveAllFromDir(laraPath, path)
-	helpers.DeleteDirectory(laraPath)
+	//helpers.MoveAllFromDir(laraPath, path)
+	//helpers.DeleteDirectory(laraPath)
 
 	// останавливаем контейнеры чтоб перезаписать конфиги и поднять с новыми конфигами
 	console.Info("STOPPED DOCKERS")

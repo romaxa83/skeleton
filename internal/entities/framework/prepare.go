@@ -12,7 +12,6 @@ const (
 	titleDriver = "Choice Framework"
 	titleVersion = "Choice Framework version"
 	titleRunMigration = "Run migration"
-	titleRunSeed = "Run seed"
 )
 
 var laravelVersion = []string{"8", "7"}
@@ -46,7 +45,6 @@ func GetData() *Data {
 		}
 
 		m := console.Ask(titleRunMigration)
-		s := console.Ask(titleRunSeed)
 
 		// todo добавить slim
 		// т.к. slim  вразработке отключаем использование
@@ -57,7 +55,6 @@ func GetData() *Data {
 			Driver: d,
 			Version: v,
 			RunMigration: m,
-			RunSeed: s,
 		}
 	}
 

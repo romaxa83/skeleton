@@ -1,8 +1,6 @@
 package app
 
 import (
-	"bufio"
-	"fmt"
 	"github.com/romaxa83/skeleton/internal/console"
 	"github.com/romaxa83/skeleton/internal/entities/db"
 	"github.com/romaxa83/skeleton/internal/entities/framework"
@@ -13,7 +11,6 @@ import (
 	"github.com/romaxa83/skeleton/internal/entities/redis"
 	"github.com/romaxa83/skeleton/internal/entities/server"
 	"github.com/romaxa83/skeleton/internal/helpers"
-	"io"
 	"time"
 
 	//"os"
@@ -31,25 +28,6 @@ var endDockerCompose string = `networks:
       config:
         - subnet: {ip}
 `
-
-func replace(r io.Reader, w io.Writer) error {
-	// use scanner to read line by line
-	sc := bufio.NewScanner(r)
-	for sc.Scan() {
-		line := sc.Text()
-		fmt.Println("LINE")
-		fmt.Println(line)
-		fmt.Println("---------------------------------")
-		if line == "nginx" {
-			line = strings.Replace(line, "nginx", "test",2)
-			//line = "APP_NAME=TEST"
-		}
-		if _, err := io.WriteString(w, line+"\n"); err != nil {
-			return err
-		}
-	}
-	return sc.Err()
-}
 
 func Create(config *Config) {
 
@@ -115,9 +93,6 @@ func Create(config *Config) {
 		time.Sleep(8 * time.Second)
 		if config.Framework.RunMigration {
 			console.Run("docker-compose", "-f", pathToDockerCompose, "--env-file", envFile, "run", "--rm", "php-fpm", "php", "artisan", "migrate")
-		}
-		if config.Framework.RunSeed {
-			console.Run("docker-compose", "-f", pathToDockerCompose, "--env-file", envFile, "run", "--rm", "php-fpm", "php", "artisan", "db:seed")
 		}
 	}
 
