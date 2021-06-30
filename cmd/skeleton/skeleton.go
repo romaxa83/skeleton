@@ -10,9 +10,12 @@ import (
 func main() {
 
 	console.Info("CREATOR APP")
-	config := app.InitConfig()
+	//выбираем язык
+	local := app.ChoiceLocal()
 
-	//fmt.Println(config.DB)
+	config := app.InitConfig(local)
+
+	//fmt.Println(config.Server)
 
 	an := console.Ask("Run build")
 	if an {

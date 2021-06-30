@@ -1,4 +1,4 @@
-package framework
+package back_framework
 
 import (
 	"github.com/romaxa83/skeleton/internal/console"

@@ -32,6 +32,9 @@ down-clear:
 build:
 	docker-compose build
 
+.PHONY: info
+info: ps info_domen
+
 ps:
 	docker-compose ps
 
@@ -45,13 +48,34 @@ db_bash:
 
 #=======INTO_CONTAINER=================
 
-info:
-	echo "http://{ip}";
+.PHONY: info_domen
+info_domen:
+	echo '---------------------------------';
+	echo '----------DEV--------------------';
+	{front-service};
+	echo '---------------------------------';
 `
 
-func Create(path string, projectName string, ip string) {
+var frontServiceDevDomen string =`
+	echo http://{ip}':8080';
+`
+
+func Create(
+	path string,
+	projectName string,
+	ip string,
+	useFrontFramework bool,
+	) {
 
 	makeFile = strings.Replace(makeFile, "{name}", projectName,2)
 	makeFile = strings.Replace(makeFile, "{ip}", ip, 1)
+
+	if useFrontFramework {
+		frontServiceDevDomen = strings.Replace(frontServiceDevDomen, "{ip}", ip,1)
+		makeFile = strings.Replace(makeFile, "{front-service};", frontServiceDevDomen,1)
+	} else {
+		makeFile = strings.Replace(makeFile, "{front-service};", "",1)
+	}
+
 	helpers.CreateAndWriteFile(path + "/Makefile", makeFile)
 }

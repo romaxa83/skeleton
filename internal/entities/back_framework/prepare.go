@@ -1,4 +1,4 @@
-package framework
+package back_framework
 
 import (
 	"fmt"
@@ -8,9 +8,9 @@ import (
 const (
 	laravel = "Laravel"
 	slim = "Slim (in developing)"
-	useFramework = "Use Framework"
-	titleDriver = "Choice Framework"
-	titleVersion = "Choice Framework version"
+	useFramework = "Use Backend Framework"
+	titleDriver = "Choice Backend Framework"
+	titleVersion = "Choice Backend Framework version"
 	titleRunMigration = "Run migration"
 )
 
