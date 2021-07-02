@@ -10,10 +10,9 @@ const (
 	react = "React (in developing)"
 	useFramework = "Use Frontend Framework"
 	titleDriver = "Choice Frontend Framework"
-	name = "Name project"
+	name = "Name front project"
 )
 
-var slimVersion = make([]string, 0)
 var frameworkDriver = []string{vue, react}
 
 type Data struct {

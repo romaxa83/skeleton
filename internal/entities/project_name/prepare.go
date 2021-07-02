@@ -15,7 +15,7 @@ type Data struct {
 	Name string
 }
 
-func GetData(local string) *Data {
+func GetData() *Data {
 	//fmt.Println(local)
 	//fmt.Println(app.TitleProjectMame)
 

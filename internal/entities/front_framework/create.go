@@ -12,7 +12,7 @@ services:
   front:
     build:
       context: docker
-      dockerfile: node/Dockerfile
+      dockerfile: dev/node/Dockerfile
     volumes:
       - ./:/app
     tty: true
@@ -28,7 +28,7 @@ var dockerCompose string = `
   {name}-nginx:
     build:
       context: ./{name}/docker
-      dockerfile: nginx/Dockerfile
+      dockerfile: dev/nginx/Dockerfile
     container_name: {pname}__{name}_nginx
     hostname: {pname}__{name}_nginx
     volumes:
@@ -39,7 +39,7 @@ var dockerCompose string = `
   {name}-node:
     build:
       context: ./{name}/docker
-      dockerfile: node/Dockerfile
+      dockerfile: dev/node/Dockerfile
     container_name: {pname}__{name}_node
     hostname: {pname}__{name}_node
     volumes:
@@ -60,7 +60,7 @@ func Create(
 
 	// переменые путей
 	pathToFrontService := path + "/" + data.Name
-	pathToFrontServiceDocker := pathToFrontService + "/docker"
+	pathToFrontServiceDockerDEV := pathToFrontService + "/docker/dev"
 	pathToLocalDockerComposeFile := pathToFrontService + "/docker-compose.yml"
 
 
@@ -73,9 +73,9 @@ func Create(
 	//helpers.AddToFile(pathToDockerFile, DockerFile)
 
 	// создаем конфиги для nginx
-	inner_helpers.CreateNginx(pathToFrontServiceDocker)
+	inner_helpers.CreateNginx(pathToFrontServiceDockerDEV)
 	// создаем конфиги для node
-	inner_helpers.CreateNode(pathToFrontServiceDocker)
+	inner_helpers.CreateNode(pathToFrontServiceDockerDEV)
 
 	console.Info("UP NODE FOR INSTALL FRONTEND FRAMEWORK")
 

@@ -12,6 +12,7 @@ const (
 	titleDriver = "Choice Backend Framework"
 	titleVersion = "Choice Backend Framework version"
 	titleRunMigration = "Run migration"
+	name = "Name back project"
 )
 
 var laravelVersion = []string{"8", "7"}
@@ -20,6 +21,7 @@ var frameworkDriver = []string{laravel, slim}
 
 type Data struct {
 	UseFramework bool
+	Name string
 	Driver string
 	Version string
 	RunMigration bool

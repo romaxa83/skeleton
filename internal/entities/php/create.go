@@ -211,8 +211,8 @@ var dockerCompose string = `
 `
 
 func Create(
+	data *Data,
 	path string,
-	version string,
 	projectName string,
 ) string {
 
@@ -225,7 +225,7 @@ func Create(
 	helpers.CreateAndWriteFile(pathToPhpIni, phpIni)
 	helpers.CreateAndWriteFile(pathToBash, bash)
 
-	dockerFilePhp = strings.Replace(dockerFilePhp, "{version}", version,1)
+	dockerFilePhp = strings.Replace(dockerFilePhp, "{version}", data.Version,1)
 	dockerFilePhp = strings.Replace(dockerFilePhp, "{user}", string(helpers.GetUser().Name),-1)
 	dockerFilePhp = strings.Replace(dockerFilePhp, "{gid}", string(helpers.GetUser().Gid),-1)
 	dockerFilePhp = strings.Replace(dockerFilePhp, "{uid}", string(helpers.GetUser().Uid),-1)
